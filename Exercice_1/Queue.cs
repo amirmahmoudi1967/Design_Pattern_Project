@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
+
 public class Queue<T>
 {
 	public Node<T> head { get; set; }
 
 	public void Enqueue(Node<T> node, bool onHead = false)
 	{
-		Console.WriteLine(node.data + " has been added to the queue");
+		Console.WriteLine(node.data + " has been added to the queue\n");
 		Node<T> new_node = new Node<T>(node.data);
 
 		if (head == null)
@@ -34,10 +36,10 @@ public class Queue<T>
 	}
 	public void Dequeue()
 	{
-		Console.WriteLine(head.data + " has been removed to the queue");
+		Console.WriteLine(head.data + " has been removed to the queue\n");
 		if (head == null)
 		{
-			Console.WriteLine("Your queue is empty");
+			Console.WriteLine("Your queue is empty\n");
 		}
 		else
 		{
@@ -120,15 +122,24 @@ public class Queue<T>
 
 	public void print()
 	{
-		Console.WriteLine("\nCurrent queue :");
+		List<Node<T>> list_node = new List<Node<T>>();
 		Node<T> current = head;
 
 		while (current != null)
 		{
-			Console.Write(current.data + " ");
+			list_node.Add(current);
 			current = current.next;
 		}
-		Console.Write("\n");
+		Console.WriteLine("\nCurrent queue :");
+		if (list_node.Count == 0) { Console.WriteLine("Queue is empty\n"); }
+		else
+		{
+			foreach (Node<T> nodes in list_node)
+			{
+				Console.Write($"{nodes.data} ");
+			}
+			Console.Write("\n\n");
+		}
 	}
 
 }
