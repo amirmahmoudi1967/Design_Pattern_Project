@@ -12,5 +12,7 @@ public class Program
 		
 		l.Dequeue;
 		l.print();
+		l.Dequeue;
+		l.print();
 	}
 }
