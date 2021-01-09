@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesignPattern_Project_Ex3_Monopoly", "DesignPattern_Project_Ex3_Monopoly.csproj", "{3A9BF03C-1857-4C73-AA31-93CB8A0EE321}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A9BF03C-1857-4C73-AA31-93CB8A0EE321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A9BF03C-1857-4C73-AA31-93CB8A0EE321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A9BF03C-1857-4C73-AA31-93CB8A0EE321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A9BF03C-1857-4C73-AA31-93CB8A0EE321}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E525029-51D2-40F6-909F-DD2478BC2EB1}
+	EndGlobalSection
+EndGlobal

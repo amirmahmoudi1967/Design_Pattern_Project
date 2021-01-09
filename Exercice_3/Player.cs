@@ -5,157 +5,134 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading;
 
-public static class Factory
+namespace DesignPattern_Project_Ex3_Monopoly
 {
-    public static Player CreatePlayer()
+    public class Player : IPlayer
     {
-        return new Player();
-    }
-}
+        /*btw 0 and 39*/
+        private int position;
+        private bool JailState;
+        private int jail_time;
+        private string name;
+        private int lap;
+        private int round_nb;
 
-interface IPlayer
-{
-    bool InJail { get; }
-    string Name { get; set; }
-    int JailTime { get; set; }
-    int Lap { get; set; }
-    int Position { get; set; }
-    void Move(int val_dice);
-    void Jail();
-    void execute();
-}
-
-public class Player : IPlayer
-{
-    /*btw 0 and 39*/
-    private int position;
-    private bool ifInJail;
-    private int timeInJail;
-    private string name;
-    private int lap;
-    private int nbturn;
-
-    public int nbturn_set
-    {
-        set { nbturn = value; }
-        get { return nbturn; }
-    }
-
-    public bool InJail
-    {
-        get { return ifInJail; }
-    }
-    public string Name
-    {
-        get { return name; }
-        set { name = value; }
-    }
-    public int JailTime
-    {
-        get { return timeInJail; }
-        set { timeInJail = value; }
-    }
-    public int Lap
-    {
-        get { return lap; }
-        set { lap = value; }
-    }
-    public int Position
-    {
-        get { return position; }
-        set { position = value; }
-    }
-
-    public Player()
-    {
-        position = 0;
-        ifInJail = false;
-        lap = 0;
-    }
-
-    public void Move(int val)
-    {
-        position = position + val;
-
-        /*if you do a full plateau turn */
-        if ((position + val) > 39)
+        public int nbturn_set
         {
-            position = position + val - 40;
-            lap++;
+            set { round_nb = value; }
+            get { return round_nb; }
         }
-    }
-    public void Jail()
-    {
-        Console.WriteLine("No Luck M. " + name);
-        position = 10;
-        ifInJail = true;
-        timeInJail = 0;
-    }
-    public int[] TwoDice()
-    {
-        int[] array = new int[2];
-        Random rnd = new Random(Guid.NewGuid().GetHashCode());
-        for (int i = 0; i < array.Length; i++)
+
+        public bool InJail
         {
-            array[i] = rnd.Next(1, 7);
+            get { return JailState; }
         }
-        return array;
-    }
-
-    public void execute()
-    {
-        /*The game!*/
-        /*insert thread*/
-
-        for (int j = 0; j < nbturn; j++)
+        public string Name
         {
+            get { return name; }
+            set { name = value; }
+        }
+        public int JailTime
+        {
+            get { return jail_time; }
+            set { jail_time = value; }
+        }
+        public int Lap
+        {
+            get { return lap; }
+            set { lap = value; }
+        }
+        public int Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
 
+        public Player()
+        {
+            position = 0;
+            JailState = false;
+            lap = 0;
+        }
 
-            /*start of the player i turn*/
+        public void Movement(int val)
+        {
+            position = position + val;
 
-            /*dice gestion*/
-
-            /*Double or not Double*/
-            int[] resDices;
-            int sumDices;
-            int CountDouble = 0;
-            do
+            // For a full turn of our gameboard. 
+            if ((position + val) > 39)
             {
-                resDices = TwoDice();
-                sumDices = resDices[0] + resDices[1];
-                if (resDices[1] == resDices[0])
-                {
-                    CountDouble++;
-                }
-                if (CountDouble >= 3)
-                {
-                    Jail();
-                }
+                position = position + val - 40;
+                lap++;
+            }
+        }
+        public void Jail()
+        {
+            Console.WriteLine("The player " + name + " got in jail !");
+            position = 10;
+            JailState = true;
+            jail_time = 0;
+        }
+        public int[] Dice_Randomizer()
+        {
+            int[] array = new int[2];
+            Random rnd = new Random(Guid.NewGuid().GetHashCode());
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = rnd.Next(1, 7);
+            }
+            return array;
+        }
 
-                /*let's move a bit (or not)*/
-                if (InJail)
-                {
-                    if (resDices[1] == resDices[0] || JailTime >= 3)
-                    {
-                        Move(sumDices);
-                        timeInJail = 0;
-                    }
-                    else
-                    {
-                        timeInJail++;
-                    }
-                }
+        public void Game_start()
+        {
+            // Inserting a thread. 
 
-                if (!InJail)
+            for (int j = 0; j < round_nb; j++)
+            {
+
+                int[] res_dices;
+                int sum_dices;
+                int same_dices = 0;
+                do
                 {
-                    Move(sumDices);
-                    if (position == 30)
+                    res_dices = Dice_Randomizer();
+                    sum_dices = res_dices[0] + res_dices[1];
+                    if (res_dices[1] == res_dices[0])
+                    {
+                        same_dices++;
+                    }
+                    if (same_dices >= 3)
                     {
                         Jail();
                     }
-                }
-            } while (resDices[1] == resDices[0] && CountDouble < 3);
-            CountDouble = 0;
+
+                    if (InJail)
+                    {
+                        if (res_dices[1] == res_dices[0] || JailTime >= 3)
+                        {
+                            Movement(sum_dices);
+                            jail_time = 0;
+                        }
+                        else
+                        {
+                            jail_time++;
+                        }
+                    }
+
+                    if (!InJail)
+                    {
+                        Movement(sum_dices);
+                        if (position == 30)
+                        {
+                            Jail();
+                        }
+                    }
+                } while (res_dices[1] == res_dices[0] && same_dices < 3);
+                same_dices = 0;
+            }
         }
+
+
     }
 }

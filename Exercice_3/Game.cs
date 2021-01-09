@@ -5,59 +5,65 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading;
 
-public class Game
+
+namespace DesignPattern_Project_Ex3_Monopoly
 {
-    private List<Player> players = new List<Player>();
-
-    public Game(int nbPlayers)
+    class Game
     {
-        for (int i = 0; i < nbPlayers; i++)
+
+        private List<Player> players = new List<Player>();
+
+        public Game(int nbPlayers)
         {
-            players.Add(Factory.CreatePlayer());
-            players[i].Name = Convert.ToString(i);
-        }
-    }
-    public void Play(int nbTurn)
-    {
-        int maxLap = 0;
-        int maxPosition = 0;
-        int bestPlayer = -1;
-
-
-        /*set names*/
-        Thread[] t = new Thread[players.Count];
-        for (int i = 0; i < players.Count; i++)
-        {
-            Console.WriteLine("\n set name of player " + i);
-            string name = Console.ReadLine();
-            players[i].Name = name;
-            players[i].nbturn_set = nbTurn;
-        }
-        /* threading player */
-        for (int i = 0; i < players.Count; i++)
-        {
-            t[i] = new Thread(new ThreadStart(players[i].execute));
-            t[i].Start();
-        }
-
-        // Here I need to wait all the threads to have ended
-        foreach (Thread th in t)
-            th.Join();
-
-
-        // Result
-        for (int i = 0; i < players.Count; i++)
-        {
-            if (maxLap < players[i].Lap || (maxLap == players[i].Lap && maxPosition < players[i].Position))
+            for (int i = 0; i < nbPlayers; i++)
             {
-                bestPlayer = i;
-                maxLap = players[i].Lap;
-                maxPosition = players[i].Position;
+                players.Add(Factory.CreatePlayer());
+                players[i].Name = Convert.ToString(i);
+            }
+        }
+        public void Play(int nbTurn)
+        {
+            int max_lap = 0;
+            int max_pos = 0;
+            int bestPlayer = -1;
+
+
+            // Setting names 
+            Thread[] t = new Thread[players.Count];
+            for (int i = 0; i < players.Count; i++)
+            {
+                Console.WriteLine("\n set name of player " + i);
+                string name = Console.ReadLine();
+                players[i].Name = name;
+                players[i].nbturn_set = nbTurn;
+            }
+            // Using threads for each player
+            for (int i = 0; i < players.Count; i++)
+            {
+                t[i] = new Thread(new ThreadStart(players[i].Game_start));
+                t[i].Start();
             }
 
-            Console.WriteLine("Players " + players[i].Name + " completed " + players[i].Lap + " lap(s) and is in position " + players[i].Position);
+            // We need to wait for the threads to end 
+            foreach (Thread th in t)
+                th.Join();
+
+
+            // Result
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (max_lap < players[i].Lap || (max_lap == players[i].Lap && max_pos < players[i].Position))
+                {
+                    bestPlayer = i;
+                    max_lap = players[i].Lap;
+                    max_pos = players[i].Position;
+                }
+
+                Console.WriteLine("Players " + players[i].Name + " completed " + players[i].Lap + " lap(s) and is in position " + players[i].Position);
+            }
+
+            Console.WriteLine("Players " + players[bestPlayer].Name + " Win!");
         }
 
-        Console.WriteLine("Players " + players[bestPlayer].Name + " Win!");
     }
 }
