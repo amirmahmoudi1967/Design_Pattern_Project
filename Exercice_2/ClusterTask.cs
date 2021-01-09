@@ -1,38 +1,42 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-class ClusterTask
+
+namespace DesignPattern_Project
 {
-    private int[] array;
-    private Dictionary<int, int> results;
-    public ClusterTask(int[] array)
+    class ClusterTask
     {
-        this.array = array;
-        results = new Dictionary<int, int>();
-    }
-    public void execute()
-    {
-        int rows = array.Length;
-
-        for (int a = 0; a < rows; a++)
+        private int[] array;
+        private Dictionary<int, int> results;
+        public ClusterTask(int[] array)
         {
-            int val = array[a];
+            this.array = array;
+            results = new Dictionary<int, int>();
+        }
+        public void execute()
+        {
+            int rows = array.Length;
 
-            if (results.ContainsKey(val))
+            for (int a = 0; a < rows; a++)
             {
-                results[val] = results[val] + 1;
-            }
-            else
-            {
-                results[val] = 1;
+                int val = array[a];
+
+                if (results.ContainsKey(val))
+                {
+                    results[val] = results[val] + 1;
+                }
+                else
+                {
+                    results[val] = 1;
+                }
             }
         }
-    }
-    public Dictionary<int, int> GetResults()
-    {
-        return results;
+        public Dictionary<int, int> GetResults()
+        {
+            return results;
+        }
     }
 }
